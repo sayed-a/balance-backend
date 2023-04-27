@@ -1,0 +1,30 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Backend application for the Balance mobile app
+
+Transform:
+- AWS::Serverless-2016-10-31
+
+Parameters:
+  pCategories:
+    Type: String
+
+Resources:
+
+  # DynamoDB table to store activity types: {id: "ID", name: "ActivityName", category: "CategoryName"}
+  ActivitiesTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      TableName: balance-activities
+      PrimaryKey:
+        Name: id
+        Type: String
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+
+  CatergoriesParameter:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: balance-categories
+      Type: StringList
+      Value: !Ref pCategories
