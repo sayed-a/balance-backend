@@ -7,8 +7,45 @@ Transform:
 Parameters:
   pCategories:
     Type: String
+  pEnvironment:
+    Type: String
+    AllowedValues:
+    - dev
+    - prod
 
 Resources:
+
+  # API Gateway
+  ApiGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: balance-api-gateway
+      StageName: !Ref pEnvironment
+      TracingEnabled: true
+
+  # Lambda function to get categories
+  GetCategoriesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: nodejs18.x
+      Handler: src/handlers/get-categories.getCategoriesHandler
+      MemorySize: 128
+      Timeout: 100
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /api/categories
+            Method: GET
+            RestApiId: !Ref ApiGateway
+      Policies:
+      - AWSLambdaExecute
+      - Version: '2012-10-17' 
+        Statement:
+        - Effect: Allow
+          Action:
+            - ssm:GetParameter
+          Resource: !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/balance/categories'
 
   # DynamoDB table to store activity types: {id: "ID", name: "ActivityName", category: "CategoryName"}
   ActivitiesTable:
@@ -25,6 +62,6 @@ Resources:
   CatergoriesParameter:
     Type: AWS::SSM::Parameter
     Properties:
-      Name: balance-categories
+      Name: /balance/categories
       Type: StringList
       Value: !Ref pCategories
