@@ -2,7 +2,7 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import { defaultHeaders, loadSsmParameter } from '../Utils'
 
 export const getCategoriesHandler = async function(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
-    let categories = await loadSsmParameter("balance-categories")
+    let categories = await loadSsmParameter("/balance/categories")
 
     if (categories == null) {
         let responseBody: ErrorResponse = {
@@ -16,7 +16,7 @@ export const getCategoriesHandler = async function(event: APIGatewayProxyEvent):
             body: JSON.stringify(responseBody)
         }
     } else {
-        let responseBody: Array<Category> = categories.split(',').map(category => { 
+        let responseBody: Array<Category> = categories.split(',').sort().map(category => { 
             return <Category> {
                 name: category, 
                 activities: [] 
