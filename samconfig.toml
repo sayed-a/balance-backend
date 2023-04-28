@@ -20,7 +20,7 @@ resolve_s3 = true
 s3_prefix = "balance-backend"
 region = "eu-west-1"
 image_repositories = []
-parameter_overrides = "pCategories=\"Work,Religion,Family,Health,Social,Sleep,Recreation\""
+parameter_overrides = "pCategories=\"Work,Religion,Family,Health,Social,Sleep,Recreation\" pEnvironment=\"dev\""
 
 [default.package.parameters]
 resolve_s3 = true
