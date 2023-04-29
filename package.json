@@ -7,7 +7,8 @@
         "@aws-sdk/client-dynamodb": "^3.188.0",
         "@aws-sdk/client-ssm": "^3.321.1",
         "@aws-sdk/lib-dynamodb": "^3.188.0",
-        "aws-lambda": "^1.0.7"
+        "aws-lambda": "^1.0.7",
+        "esbuild": "^0.17.18"
     },
     "devDependencies": {
         "@types/aws-lambda": "^8.10.114",
@@ -18,7 +19,8 @@
     },
     "scripts": {
         "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js",
-        "compile": "tsc"
+        "compile": "tsc",
+        "clean": "tsc --build --clean"
     },
     "jest": {
         "testMatch": [

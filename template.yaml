@@ -46,6 +46,12 @@ Resources:
           Action:
             - ssm:GetParameter
           Resource: !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/balance/categories'
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Target: es2020
+        Minify: false
+
 
   # DynamoDB table to store activity types: {id: "ID", name: "ActivityName", category: "CategoryName"}
   ActivitiesTable:
