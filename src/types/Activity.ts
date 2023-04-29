@@ -1,4 +1,5 @@
 interface Activity {
     id: number,
-    name: string
+    name: string,
+    category: string
 }
