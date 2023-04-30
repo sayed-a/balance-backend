@@ -1,13 +1,13 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
-import { defaultHeaders } from "../../Utils";
+import { defaultHeaders, getUserPoolClientId, getUserPoolId } from "../../utils/Utils";
 import AWS from "aws-sdk";
 
 const cognitoService = new AWS.CognitoIdentityServiceProvider()
 
 export const signUpHandler = async function (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
     try {
-        let userPoolId = await getUserPoolId()
-        let clientId = await getUserPoolClientId(userPoolId)
+        let userPoolId = await getUserPoolId(cognitoService)
+        let clientId = await getUserPoolClientId(cognitoService, userPoolId)
 
         if (event.body != null) {
             let request: SignUpRequest = JSON.parse(event.body)
@@ -50,58 +50,6 @@ export const signUpHandler = async function (event: APIGatewayProxyEvent): Promi
             body: JSON.stringify(responseBody)
         }
     }
-}
-
-async function getUserPoolId(): Promise<string> {
-    return new Promise(
-        (resolve, reject) => {
-            let params = {
-                MaxResults: 3
-            }
-
-            cognitoService.listUserPools(params, function (err, data) {
-                if (err) {
-                    console.log(err.toString())
-
-                    reject(err)
-                } else {
-                    let userPoolId = data.UserPools?.find(u => u.Name == "balance-user-pool")?.Id
-
-                    if (userPoolId != null) {
-                        resolve(userPoolId)
-                    } else {
-                        console.log("No user pool ID found")
-
-                        reject(new Error("No user pool ID found"))
-                    }
-                }
-            })
-        }
-    )
-}
-
-async function getUserPoolClientId(userPoolId: string): Promise<string> {
-    return new Promise(
-        (resolve, reject) => {
-            let params = { UserPoolId: userPoolId }
-
-            cognitoService.listUserPoolClients(params, function (err, data) {
-                if (err) {
-                    console.log(err.toString())
-                    reject(err)
-                } else {
-                    let clientId = data.UserPoolClients?.find(c => c.ClientName == "balance-user-pool-client")?.ClientId
-                    if (clientId != null) {
-                        resolve(clientId)
-                    } else {
-                        console.log("No client ID found for UserPool")
-
-                        reject(new Error("No client ID found for UserPool"))
-                    }
-                }
-            })
-        }
-    )
 }
 
 async function signUp(clientId: string, request: SignUpRequest): Promise<User> {
