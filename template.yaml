@@ -65,6 +65,29 @@ Resources:
       UserPoolId: !Ref UserPool
 
   # Lambda function to get categories
+  SignUpFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: nodejs18.x
+      Handler: src/handlers/sign-up/sign-up.signUpHandler
+      MemorySize: 128
+      Timeout: 100
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /api/sign-up
+            Method: POST
+            RestApiId: !Ref ApiGateway
+      Policies:
+      - AWSLambdaExecute
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Target: es2020
+        Minify: false
+
+  # Lambda function to get categories
   GetCategoriesFunction:
     Type: AWS::Serverless::Function
     Properties:
