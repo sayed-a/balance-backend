@@ -88,6 +88,29 @@ Resources:
         Minify: false
 
   # Lambda function to get categories
+  SignUpFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: nodejs18.x
+      Handler: src/handlers/log-in/log-in.logInHandler
+      MemorySize: 128
+      Timeout: 100
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /api/log-in
+            Method: POST
+            RestApiId: !Ref ApiGateway
+      Policies:
+      - AWSLambdaExecute
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Target: es2020
+        Minify: false
+
+  # Lambda function to get categories
   GetCategoriesFunction:
     Type: AWS::Serverless::Function
     Properties:
