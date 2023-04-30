@@ -1,6 +1,6 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
-import { defaultHeaders, getUserPoolClientId, getUserPoolId } from "../../utils/Utils";
-import AWS from "aws-sdk";
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda"
+import { defaultHeaders, getUserPoolClientId, getUserPoolId } from "../../utils/Utils"
+import AWS from "aws-sdk"
 
 const cognitoService = new AWS.CognitoIdentityServiceProvider()
 
