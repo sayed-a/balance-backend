@@ -23,6 +23,47 @@ Resources:
       StageName: !Ref pEnvironment
       TracingEnabled: true
 
+  # Amazon Cognito User Pool
+  UserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: balance-user-pool
+      UsernameConfiguration:
+        CaseSensitive: false
+      UsernameAttributes:
+      - email
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+          RequireLowercase: true
+          RequireUppercase: true
+          RequireNumbers: true
+          RequireSymbols: true
+
+  # Amazon Cognito User Pool Client
+  UserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      AccessTokenValidity: 1
+      RefreshTokenValidity: 180
+      TokenValidityUnits:
+        AccessToken: hours
+        RefreshToken: days
+      AllowedOAuthFlows:
+      - implicit
+      AllowedOAuthFlowsUserPoolClient: true
+      AllowedOAuthScopes:
+      - email
+      - openid
+      - profile
+      ClientName: balance-user-pool-client
+      CallbackURLs:
+      - someApp://test # TODO: Fix this
+      ExplicitAuthFlows:
+      - ALLOW_USER_PASSWORD_AUTH
+      - ALLOW_REFRESH_TOKEN_AUTH
+      UserPoolId: !Ref UserPool
+
   # Lambda function to get categories
   GetCategoriesFunction:
     Type: AWS::Serverless::Function
