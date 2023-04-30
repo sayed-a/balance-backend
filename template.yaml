@@ -28,7 +28,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Runtime: nodejs18.x
-      Handler: src/handlers/get-categories.getCategoriesHandler
+      Handler: src/handlers/get-categories/get-categories.getCategoriesHandler
       MemorySize: 128
       Timeout: 100
       Events:

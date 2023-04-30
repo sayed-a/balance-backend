@@ -1,6 +1,6 @@
 import { expect, test, jest } from '@jest/globals'
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
-import { getCategoriesHandler } from '../../../src/handlers/get-categories';
+import { getCategoriesHandler } from '../../../src/handlers/get-categories/get-categories';
 import * as utils from '../../../src/Utils';
 
 const event: APIGatewayProxyEvent = {
