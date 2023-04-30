@@ -1,5 +1,5 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
-import { defaultHeaders, fetchAllItems, loadSsmParameter } from '../Utils'
+import { defaultHeaders, fetchAllItems, loadSsmParameter } from '../../Utils'
 
 export const getCategoriesHandler = async function(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
     try {
