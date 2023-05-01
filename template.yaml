@@ -28,6 +28,8 @@ Resources:
     Type: AWS::Cognito::UserPool
     Properties:
       UserPoolName: balance-user-pool
+      LambdaConfig:
+        PreSignUp: !GetAtt PreSignUpFunction.Arn
       UsernameConfiguration:
         CaseSensitive: false
       UsernameAttributes:
@@ -81,11 +83,49 @@ Resources:
             RestApiId: !Ref ApiGateway
       Policies:
       - AWSLambdaExecute
+      - Version: '2012-10-17' 
+        Statement:
+        - Effect: Allow
+          Action:
+            - cognito-idp:ListUserPoolClients
+            - cognito-idp:SignUp
+          Resource: !GetAtt UserPool.Arn
+      - Version: '2012-10-17' 
+        Statement:
+        - Effect: Allow
+          Action:
+            - cognito-idp:ListUserPools
+          Resource: "*"
     Metadata:
       BuildMethod: esbuild
       BuildProperties:
         Target: es2020
         Minify: false
+
+  
+  # Lambda function for pre-sign up
+  PreSignUpFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: nodejs18.x
+      Handler: src/handlers/sign-up/pre-sign-up.preSignUpHandler
+      MemorySize: 128
+      Timeout: 100
+      Policies:
+      - AWSLambdaExecute
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Target: es2020
+        Minify: false
+
+  PreSignUpFunctionPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:invokeFunction
+      FunctionName: !GetAtt PreSignUpFunction.Arn
+      Principal: cognito-idp.amazonaws.com
+      SourceArn: !GetAtt UserPool.Arn
 
   # Lambda function to get categories
   GetCategoriesFunction:
